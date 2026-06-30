@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  /* Memastikan font global Inter yang konsisten dan profesional sesuai identitas akademik SIAKAD */
+  html, body, input, select, textarea, button, table, td, th, div, span, p, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif !important;
+  }
+
+  body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* Page Title: 18px 600 */
+  h1, .page-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    letter-spacing: -0.01em;
+  }
+
+  /* Section Title: 16px 600 */
+  h2, .section-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    letter-spacing: -0.005em;
+  }
+
+  /* Card Title: 15px 600 */
+  h3, .card-title {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Body: 14px 400 */
+  p, input, select, textarea {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  /* Table Header: 13px 600 */
+  th, thead th {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+  }
+
+  /* Table Body: 13px 400 */
+  td, tbody td {
+    font-size: 13px !important;
+    font-weight: 400 !important;
+  }
+
+  /* Button: 14px 500 */
+  button, .btn, a[role="button"], button span {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
+
+  /* Caption: 12px 400 */
+  small, .caption, label, .text-xs {
+    font-size: 12px !important;
+    font-weight: 400;
+  }
+
+  /* Statistic Numbers: 24px 700 */
+  .stat-number, .text-3xl, .text-4xl, .text-2xl:not(h1):not(h2) {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Specific spacing adjustments for modern academic information system style */
+h1 { margin-bottom: 4px; }
+h2 { margin-bottom: 8px; }
+h3 { margin-bottom: 8px; }
+table { border-collapse: separate; border-spacing: 0; }
+th, td { padding: 12px 16px; }
