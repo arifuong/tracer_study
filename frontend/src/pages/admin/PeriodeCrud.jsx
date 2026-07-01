@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../utils/api';
+import { getAllPeriode, createPeriode, updatePeriode, deletePeriode } from '../../services/periodeService';
 import { Calendar, Plus, Edit2, Trash2, X, Check, AlertCircle, Loader2 } from 'lucide-react';
 
 const PeriodeCrud = () => {
@@ -22,7 +22,7 @@ const PeriodeCrud = () => {
 
   const fetchPeriods = async () => {
     try {
-      const response = await api.get('/api/admin/periode');
+      const response = await getAllPeriode();
       setPeriods(response.data);
     } catch (err) {
       setError('Gagal memuat periode kuesioner. Silakan muat ulang.');
@@ -76,9 +76,9 @@ const PeriodeCrud = () => {
 
     try {
       if (currentId) {
-        await api.put(`/api/admin/periode/${currentId}`, payload);
+        await updatePeriode(currentId, payload);
       } else {
-        await api.post('/api/admin/periode', payload);
+        await createPeriode(payload);
       }
       setIsModalOpen(false);
       fetchPeriods();
@@ -95,7 +95,7 @@ const PeriodeCrud = () => {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/admin/periode/${id}`);
+      await deletePeriode(id);
       setConfirmDeleteId(null);
       fetchPeriods();
     } catch (err) {

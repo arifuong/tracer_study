@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../utils/api';
+import { getAllPeriode } from '../../services/periodeService';
+import { getMonitoringPengisian } from '../../services/monitoringService';
 import { BarChart3, Search, Calendar, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 const MonitoringPengisian = () => {
@@ -15,7 +16,7 @@ const MonitoringPengisian = () => {
   useEffect(() => {
     const fetchPeriods = async () => {
       try {
-        const response = await api.get('/api/admin/periode');
+        const response = await getAllPeriode();
         setPeriods(response.data);
         if (response.data.length > 0) {
           setSelectedPeriodId(response.data[0].id.toString());
@@ -37,7 +38,7 @@ const MonitoringPengisian = () => {
     const fetchMonitoringList = async () => {
       setLoadingList(true);
       try {
-        const response = await api.get(`/api/admin/monitoring/${selectedPeriodId}`);
+        const response = await getMonitoringPengisian(selectedPeriodId);
         setMonitoringData(response.data);
       } catch (err) {
         setError('Gagal memuat status pengisian alumni.');

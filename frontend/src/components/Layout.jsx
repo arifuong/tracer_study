@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import api from '../utils/api';
+import { getAlumniProfile } from '../services/alumniService';
 import { 
   User, FileText, LayoutDashboard, Users, Calendar, 
   Layers, BarChart3, LogOut, Menu, X, ClipboardCheck, FileSpreadsheet, Lock
@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
   // Indonesian comment: Memastikan pengguna mengisi semua data profil wajib dan mengubah password default sebelum mengakses kuesioner.
   useEffect(() => {
     if (role === 'ALUMNI') {
-      api.get('/api/alumni/profile')
+      getAlumniProfile()
         .then(res => {
           const data = res.data;
           const complete = data.profileComplete;

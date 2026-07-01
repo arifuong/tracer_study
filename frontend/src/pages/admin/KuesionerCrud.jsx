@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../../utils/api';
+import { getAllKuesioner, createKuesioner, updateKuesioner, deleteKuesioner } from '../../services/kuesionerService';
+import { getAllPeriode } from '../../services/periodeService';
 import { Layers, Plus, Edit2, Trash2, HelpCircle, X, Check, AlertCircle, Loader2 } from 'lucide-react';
 
 const KuesionerCrud = () => {
@@ -24,8 +25,8 @@ const KuesionerCrud = () => {
   const fetchKuesionersAndPeriods = async () => {
     try {
       const [kuesionerRes, periodRes] = await Promise.all([
-        api.get('/api/admin/kuesioner'),
-        api.get('/api/admin/periode')
+        getAllKuesioner(),
+        getAllPeriode()
       ]);
       setKuesioners(kuesionerRes.data);
       setPeriods(periodRes.data);
@@ -84,9 +85,9 @@ const KuesionerCrud = () => {
 
     try {
       if (currentId) {
-        await api.put(`/api/admin/kuesioner/${currentId}`, payload);
+        await updateKuesioner(currentId, payload);
       } else {
-        await api.post('/api/admin/kuesioner', payload);
+        await createKuesioner(payload);
       }
       setIsModalOpen(false);
       fetchKuesionersAndPeriods();
@@ -103,7 +104,7 @@ const KuesionerCrud = () => {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/admin/kuesioner/${id}`);
+      await deleteKuesioner(id);
       setConfirmDeleteId(null);
       fetchKuesionersAndPeriods();
     } catch (err) {

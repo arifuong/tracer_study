@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import api from '../../utils/api';
+import { getAllAlumni, createAlumni, updateAlumni, deleteAlumni } from '../../services/alumniService';
 import { 
   Users, Search, Plus, Edit2, Trash2, 
   X, Check, AlertCircle, Loader2 
@@ -35,7 +35,7 @@ const AlumniCrud = () => {
 
   const fetchAlumni = async () => {
     try {
-      const response = await api.get('/api/admin/alumni');
+      const response = await getAllAlumni();
       setAlumniList(response.data);
     } catch (err) {
       setError('Gagal memuat daftar alumni. Silakan muat ulang.');
@@ -114,9 +114,9 @@ const AlumniCrud = () => {
 
     try {
       if (currentId) {
-        await api.put(`/api/admin/alumni/${currentId}`, payload);
+        await updateAlumni(currentId, payload);
       } else {
-        await api.post('/api/admin/alumni', payload);
+        await createAlumni(payload);
       }
       setIsModalOpen(false);
       fetchAlumni();
@@ -133,7 +133,7 @@ const AlumniCrud = () => {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/admin/alumni/${id}`);
+      await deleteAlumni(id);
       setConfirmDeleteId(null);
       fetchAlumni();
     } catch (err) {
@@ -390,18 +390,7 @@ const AlumniCrud = () => {
                   </select>
                 </div>
 
-                {!currentId && (
-                  <div className="sm:col-span-2">
-                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">Password Default (Opsional)</label>
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Default: NIM"
-                      className="w-full px-4 h-10 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white text-sm transition-all shadow-sm"
-                    />
-                  </div>
-                )}
+               
 
                 <div className="sm:col-span-2">
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">Alamat Rumah</label>

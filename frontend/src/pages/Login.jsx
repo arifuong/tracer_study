@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../utils/api';
+import { login } from '../services/authService';
 import { Lock, User, AlertCircle, Loader2 } from 'lucide-react';
 
 const Login = () => {
@@ -16,7 +16,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/api/auth/login', { username, password });
+      const response = await login(username, password);
       const { token, role, username: resUser } = response.data;
       
       localStorage.setItem('token', token);

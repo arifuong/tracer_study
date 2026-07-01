@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../utils/api';
+import { getAllPeriode } from '../../services/periodeService';
+import { getMonitoringJawaban, getMonitoringJawabanDetail } from '../../services/monitoringService';
 import { BarChart3, Search, Calendar, CheckCircle2, AlertCircle, Loader2, Eye, X, User, BookOpen } from 'lucide-react';
 
 const MonitoringJawaban = () => {
@@ -21,7 +22,7 @@ const MonitoringJawaban = () => {
   useEffect(() => {
     const fetchPeriods = async () => {
       try {
-        const response = await api.get('/api/admin/periode');
+        const response = await getAllPeriode();
         setPeriods(response.data);
         if (response.data.length > 0) {
           setSelectedPeriodId(response.data[0].id.toString());
@@ -43,7 +44,7 @@ const MonitoringJawaban = () => {
     const fetchMonitoringList = async () => {
       setLoadingList(true);
       try {
-        const response = await api.get(`/api/admin/monitoring/${selectedPeriodId}`);
+        const response = await getMonitoringJawaban(selectedPeriodId);
         setMonitoringData(response.data);
       } catch (err) {
         setError('Gagal memuat status pengisian alumni.');
@@ -66,7 +67,7 @@ const MonitoringJawaban = () => {
     setAnswersData(null);
 
     try {
-      const response = await api.get(`/api/admin/monitoring/${selectedPeriodId}/alumni/${alumni.alumniId}`);
+      const response = await getMonitoringJawabanDetail(selectedPeriodId, alumni.alumniId);
       setAnswersData(response.data);
     } catch (err) {
       setModalError(err.response?.data?.message || 'Gagal memuat detail jawaban alumni.');

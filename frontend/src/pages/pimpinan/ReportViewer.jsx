@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../utils/api';
+import { getAllPeriode } from '../../services/periodeService';
+import { downloadPdf, downloadExcel } from '../../services/laporanService';
 import { 
   FileSpreadsheet, FileText, Calendar, Check, AlertCircle, Loader2 
 } from 'lucide-react';
@@ -16,7 +17,7 @@ const ReportViewer = () => {
 
   const fetchPeriods = async () => {
     try {
-      const periodRes = await api.get('/api/admin/periode');
+      const periodRes = await getAllPeriode();
       setPeriods(periodRes.data);
       if (periodRes.data.length > 0) {
         setSelectedPeriodId(periodRes.data[0].id.toString());
@@ -52,15 +53,11 @@ const ReportViewer = () => {
     setExporting(true);
 
     try {
-      const endpoint = format === 'pdf' ? '/api/laporan/export/pdf' : '/api/laporan/export/excel';
       const fileExt = format === 'pdf' ? 'pdf' : 'xlsx';
       
-      const response = await api.post(endpoint, {
-        periodeId: parseInt(selectedPeriodId),
-        namaLaporan: reportName || 'Laporan Tracer Study'
-      }, {
-        responseType: 'blob'
-      });
+      const response = format === 'pdf'
+        ? await downloadPdf(parseInt(selectedPeriodId), reportName || 'Laporan Tracer Study')
+        : await downloadExcel(parseInt(selectedPeriodId), reportName || 'Laporan Tracer Study');
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../utils/api';
+import { getAlumniProfile, updateAlumniProfile } from '../../services/alumniService';
 import { User, Mail, Phone, MapPin, Calendar, CheckCircle2, AlertCircle, Loader2, Lock, ShieldCheck, Check } from 'lucide-react';
 
 const AlumniProfile = () => {
@@ -40,7 +40,7 @@ const AlumniProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await api.get('/api/alumni/profile');
+        const response = await getAlumniProfile();
         const data = response.data;
         
         setFormData({
@@ -102,7 +102,7 @@ const AlumniProfile = () => {
     };
 
     try {
-      const response = await api.put('/api/alumni/profile', payload);
+      const response = await updateAlumniProfile(payload);
       setProfileSuccess('Profil Anda berhasil diperbarui.');
       
       const data = response.data;
@@ -181,7 +181,7 @@ const AlumniProfile = () => {
     };
 
     try {
-      const response = await api.put('/api/alumni/profile', payload);
+      const response = await updateAlumniProfile(payload);
       setPasswordSuccess('Password berhasil diubah.');
       setPasswordData({
         passwordSaatIni: '',

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../../utils/api';
+import { getAlumniProfile } from '../../services/alumniService';
+import { getActiveKuesioner, getSubmissionStatus } from '../../services/kuesionerService';
 import { ClipboardCheck, CheckCircle2, AlertCircle, Play, Loader2, Lock, ArrowRight } from 'lucide-react';
 
 const ActiveQuestionnaire = () => {
@@ -15,7 +16,7 @@ const ActiveQuestionnaire = () => {
   useEffect(() => {
     const fetchQuestionnaires = async () => {
       try {
-        const profileRes = await api.get('/api/alumni/profile');
+        const profileRes = await getAlumniProfile();
         setProfile(profileRes.data);
 
         // Sebelum mengambil data kuesioner:
@@ -25,8 +26,8 @@ const ActiveQuestionnaire = () => {
         }
 
         const [activeRes, submissionsRes] = await Promise.all([
-          api.get('/api/alumni/kuesioner/active'),
-          api.get('/api/alumni/pengisian/status')
+          getActiveKuesioner(),
+          getSubmissionStatus()
         ]);
         setActiveKuesioners(activeRes.data);
         setSubmissions(submissionsRes.data);

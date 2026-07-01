@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import api from '../../utils/api';
+import { getAlumniProfile } from '../../services/alumniService';
+import { getActiveKuesioner, submitAnswers } from '../../services/kuesionerService';
 import { ArrowLeft, Check, AlertCircle, Loader2, Lock, ArrowRight } from 'lucide-react';
 
 const FillQuestionnaire = () => {
@@ -20,8 +21,8 @@ const FillQuestionnaire = () => {
     const fetchQuestionnaireAndProfile = async () => {
       try {
         const [response, profileRes] = await Promise.all([
-          api.get('/api/alumni/kuesioner/active'),
-          api.get('/api/alumni/profile')
+          getActiveKuesioner(),
+          getAlumniProfile()
         ]);
         
         const list = response.data;
@@ -77,7 +78,7 @@ const FillQuestionnaire = () => {
     };
 
     try {
-      await api.post(`/api/alumni/kuesioner/${id}/isi`, payload);
+      await submitAnswers(id, payload);
       navigate('/alumni/kuesioner', { replace: true });
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {

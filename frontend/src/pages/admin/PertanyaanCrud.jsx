@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api from '../../utils/api';
+import { getKuesioner } from '../../services/kuesionerService';
+import { getPertanyaan, createPertanyaan, updatePertanyaan, deletePertanyaan } from '../../services/pertanyaanService';
 import { 
   ArrowLeft, HelpCircle, Plus, Edit2, Trash2, X, 
   Check, AlertCircle, Loader2, ListOrdered 
@@ -30,8 +31,8 @@ const PertanyaanCrud = () => {
   const fetchKuesionerAndQuestions = async () => {
     try {
       const [kuesionerRes, questionsRes] = await Promise.all([
-        api.get(`/api/admin/kuesioner/${kuesionerId}`),
-        api.get(`/api/admin/kuesioner/${kuesionerId}/pertanyaan`)
+        getKuesioner(kuesionerId),
+        getPertanyaan(kuesionerId)
       ]);
       setKuesioner(kuesionerRes.data);
       setQuestions(questionsRes.data);
@@ -104,9 +105,9 @@ const PertanyaanCrud = () => {
 
     try {
       if (currentId) {
-        await api.put(`/api/admin/pertanyaan/${currentId}`, payload);
+        await updatePertanyaan(currentId, payload);
       } else {
-        await api.post(`/api/admin/kuesioner/${kuesionerId}/pertanyaan`, payload);
+        await createPertanyaan(kuesionerId, payload);
       }
       setIsModalOpen(false);
       fetchKuesionerAndQuestions();
@@ -123,7 +124,7 @@ const PertanyaanCrud = () => {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/admin/pertanyaan/${id}`);
+      await deletePertanyaan(id);
       setConfirmDeleteId(null);
       fetchKuesionerAndQuestions();
     } catch (err) {

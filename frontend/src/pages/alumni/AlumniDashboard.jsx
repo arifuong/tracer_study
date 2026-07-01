@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../utils/api';
+import { getAlumniProfile } from '../../services/alumniService';
+import { getActiveKuesioner, getSubmissionStatus } from '../../services/kuesionerService';
 import { 
   User, ClipboardCheck, AlertCircle, 
   ArrowRight, CheckCircle2, FileClock, Loader2, Lock
@@ -18,14 +19,14 @@ const AlumniDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const profileRes = await api.get('/api/alumni/profile');
+        const profileRes = await getAlumniProfile();
         setProfile(profileRes.data);
 
         // Hanya mengambil kuesioner dan status jika profil lengkap
         if (profileRes.data.profileComplete) {
           const [submissionsRes, activeRes] = await Promise.all([
-            api.get('/api/alumni/pengisian/status'),
-            api.get('/api/alumni/kuesioner/active')
+            getSubmissionStatus(),
+            getActiveKuesioner()
           ]);
           setSubmissions(submissionsRes.data);
           setActiveKuesioners(activeRes.data);

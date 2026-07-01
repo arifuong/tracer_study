@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../utils/api';
+import { getAllPeriode } from '../../services/periodeService';
+import { getDashboard } from '../../services/dashboardService';
 import { 
   ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend,
   BarChart, Bar, XAxis, YAxis, CartesianGrid
@@ -21,7 +22,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchPeriods = async () => {
       try {
-        const res = await api.get('/api/admin/periode');
+        const res = await getAllPeriode();
         setPeriods(res.data);
       } catch (err) {
         console.error('Gagal memuat daftar periode kuesioner', err);
@@ -35,8 +36,7 @@ const AdminDashboard = () => {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        const url = selectedPeriod ? `/api/admin/dashboard?periodeId=${selectedPeriod}` : '/api/admin/dashboard';
-        const response = await api.get(url);
+        const response = await getDashboard(selectedPeriod);
         setStats(response.data);
       } catch (err) {
         setError('Gagal memuat statistik dashboard. Silakan muat ulang halaman.');
