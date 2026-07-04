@@ -277,168 +277,180 @@ const AlumniProfile = () => {
           )}
 
           <form onSubmit={handleProfileSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Nama Lengkap */}
-              <div className="md:col-span-2 flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Nama Lengkap</label>
-                <input
-                  type="text"
-                  name="namaLengkap"
-                  value={formData.namaLengkap}
-                  onChange={handleProfileChange}
-                  placeholder="Nama Lengkap Anda"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                />
-              </div>
+            <div className="space-y-6">
+              {/* Data Akademik (Read Only) */}
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* NIM */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">NIM</label>
+                    <input
+                      type="text"
+                      value={formData.nim}
+                      disabled
+                      className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed text-sm font-semibold"
+                    />
+                  </div>
 
-              {/* NIM (readonly) */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">NIM </label>
-                <input
-                  type="text"
-                  value={formData.nim}
-                  disabled
-                  className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed text-sm font-semibold"
-                />
-              </div>
+                  {/* Program Studi */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Program Studi</label>
+                    <input
+                      type="text"
+                      value={formData.prodi}
+                      disabled
+                      className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed text-sm font-semibold"
+                    />
+                  </div>
 
-              {/* Program Studi (readonly) */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Program Studi </label>
-                <input
-                  type="text"
-                  value={formData.prodi}
-                  disabled
-                  className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed text-sm font-semibold"
-                />
-              </div>
-
-              {/* Username */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleProfileChange}
-                  placeholder="Username Anda"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                />
-              </div>
-
-              {/* Tempat Lahir */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Tempat Lahir</label>
-                <input
-                  type="text"
-                  name="tempatLahir"
-                  value={formData.tempatLahir}
-                  onChange={handleProfileChange}
-                  placeholder="Contoh: Bandung"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                />
-              </div>
-
-              {/* Tanggal Lahir */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Tanggal Lahir</label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                    <Calendar size={16} />
-                  </span>
-                  <input
-                    type="date"
-                    name="tanggalLahir"
-                    value={formData.tanggalLahir}
-                    onChange={handleProfileChange}
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                  />
+                  {/* Tanggal Yudisium */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Tanggal Yudisium</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                        <Calendar size={16} />
+                      </span>
+                      <input
+                        type="date"
+                        value={formData.tanggalLulus}
+                        disabled
+                        className="w-full pl-10 pr-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 cursor-not-allowed text-sm font-semibold"
+                      />
+                    </div>
+                  </div>
                 </div>
+                <p className="text-slate-400 text-xs mt-1">
+                  Data akademik tidak dapat diubah .
+                </p>
               </div>
 
-              {/* Jenis Kelamin */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Jenis Kelamin</label>
-                <select
-                  name="jenisKelamin"
-                  value={formData.jenisKelamin}
-                  onChange={handleProfileChange}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                >
-                  <option value="">Pilih Jenis Kelamin</option>
-                  <option value="Laki-laki">Laki-laki</option>
-                  <option value="Perempuan">Perempuan</option>
-                </select>
-              </div>
+              {/* Data Pribadi (Editable) */}
+              <div className="space-y-4 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Nama Lengkap */}
+                  <div className="md:col-span-2 flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Nama Lengkap</label>
+                    <input
+                      type="text"
+                      name="namaLengkap"
+                      value={formData.namaLengkap}
+                      onChange={handleProfileChange}
+                      placeholder="Nama Lengkap Anda"
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
+                    />
+                  </div>
 
-              {/* Tanggal Lulus */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Tanggal Lulus / Yudisium</label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                    <Calendar size={16} />
-                  </span>
-                  <input
-                    type="date"
-                    name="tanggalLulus"
-                    value={formData.tanggalLulus}
-                    onChange={handleProfileChange}
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                  />
-                </div>
-              </div>
+                  {/* Username */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Username</label>
+                    <input
+                      type="text"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleProfileChange}
+                      placeholder="Username Anda"
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
+                    />
+                  </div>
 
-              {/* Email */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Email</label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                    <Mail size={16} />
-                  </span>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleProfileChange}
-                    placeholder="nama@email.com"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                  />
-                </div>
-              </div>
+                  {/* Tempat Lahir */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Tempat Lahir</label>
+                    <input
+                      type="text"
+                      name="tempatLahir"
+                      value={formData.tempatLahir}
+                      onChange={handleProfileChange}
+                      placeholder="Contoh: Bandung"
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
+                    />
+                  </div>
 
-              {/* Nomor HP */}
-              <div className="flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Nomor HP</label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                    <Phone size={16} />
-                  </span>
-                  <input
-                    type="tel"
-                    name="noHp"
-                    value={formData.noHp}
-                    onChange={handleProfileChange}
-                    placeholder="081234567890"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
-                  />
-                </div>
-              </div>
+                  {/* Tanggal Lahir */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Tanggal Lahir</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                        <Calendar size={16} />
+                      </span>
+                      <input
+                        type="date"
+                        name="tanggalLahir"
+                        value={formData.tanggalLahir}
+                        onChange={handleProfileChange}
+                        className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-blue-500 text-sm transition-colors"
+                      />
+                    </div>
+                  </div>
 
-              {/* Alamat */}
-              <div className="md:col-span-2 flex flex-col">
-                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Alamat</label>
-                <div className="relative">
-                  <span className="absolute top-3.5 left-3.5 text-slate-400">
-                    <MapPin size={16} />
-                  </span>
-                  <textarea
-                    name="alamatRumah"
-                    value={formData.alamatRumah}
-                    onChange={handleProfileChange}
-                    rows={4}
-                    placeholder="Tuliskan alamat lengkap tempat tinggal Anda saat ini"
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors resize-none"
-                  />
+                  {/* Jenis Kelamin */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Jenis Kelamin</label>
+                    <select
+                      name="jenisKelamin"
+                      value={formData.jenisKelamin}
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-blue-500 text-sm transition-colors"
+                    >
+                      <option value="">Pilih Jenis Kelamin</option>
+                      <option value="Laki-laki">Laki-laki</option>
+                      <option value="Perempuan">Perempuan</option>
+                    </select>
+                  </div>
+
+                  {/* Email */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Email</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                        <Mail size={16} />
+                      </span>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleProfileChange}
+                        placeholder="nama@email.com"
+                        className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Nomor HP */}
+                  <div className="flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Nomor HP</label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                        <Phone size={16} />
+                      </span>
+                      <input
+                        type="tel"
+                        name="noHp"
+                        value={formData.noHp}
+                        onChange={handleProfileChange}
+                        placeholder="081234567890"
+                        className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Alamat */}
+                  <div className="md:col-span-2 flex flex-col">
+                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Alamat</label>
+                    <div className="relative">
+                      <span className="absolute top-3.5 left-3.5 text-slate-400">
+                        <MapPin size={16} />
+                      </span>
+                      <textarea
+                        name="alamatRumah"
+                        value={formData.alamatRumah}
+                        onChange={handleProfileChange}
+                        rows={4}
+                        placeholder="Tuliskan alamat lengkap tempat tinggal Anda saat ini"
+                        className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 text-sm transition-colors resize-none"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

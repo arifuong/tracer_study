@@ -33,14 +33,14 @@ public class Alumni {
     @Column(name = "tempat_lahir", length = 50)
     private String tempatLahir;
 
-    // Menggunakan LocalDate untuk menghindari masalah kompatibilitas Date saat runtime
+
     @Column(name = "tanggal_lahir")
     private LocalDate tanggalLahir;
 
     @Column(nullable = false, length = 100)
     private String prodi;
 
-    // Menggunakan LocalDate untuk menghindari masalah kompatibilitas Date saat runtime
+
     @Column(name = "tanggal_lulus", nullable = false)
     private LocalDate tanggalLulus;
 

@@ -34,11 +34,25 @@ public class AlumniService {
         Alumni alumni = alumniRepository.findByUserUsername(username)
                 .orElseThrow(() -> new backend.exception.ResourceNotFoundException("Data alumni tidak ditemukan untuk user: " + username));
 
-        // Update data diri, kontak, dan alamat
+        // Validasi data yudisium bersifat read-only bagi Alumni
+        if (dto.getNim() != null && !dto.getNim().equals(alumni.getNim())) {
+            throw new backend.exception.BusinessException("Data yudisium (NIM) tidak dapat diubah.");
+        }
+        if (dto.getProdi() != null && !dto.getProdi().equals(alumni.getProdi())) {
+            throw new backend.exception.BusinessException("Data yudisium (Program Studi) tidak dapat diubah.");
+        }
+        if (dto.getTanggalLulus() != null && alumni.getTanggalLulus() != null) {
+            if (!dto.getTanggalLulus().equals(alumni.getTanggalLulus())) {
+                throw new backend.exception.BusinessException("Data yudisium (Tanggal Yudisium) tidak dapat diubah.");
+            }
+        } else if (dto.getTanggalLulus() != null || alumni.getTanggalLulus() != null) {
+            throw new backend.exception.BusinessException("Data yudisium (Tanggal Yudisium) tidak dapat diubah.");
+        }
+
+        // Update data diri, kontak, dan alamat pribadi saja
         alumni.setNamaLengkap(dto.getNamaLengkap());
         alumni.setTempatLahir(dto.getTempatLahir());
         alumni.setTanggalLahir(dto.getTanggalLahir());
-        alumni.setTanggalLulus(dto.getTanggalLulus());
         alumni.setNoHp(dto.getNoHp());
         alumni.setEmail(dto.getEmail());
         alumni.setJenisKelamin(dto.getJenisKelamin());

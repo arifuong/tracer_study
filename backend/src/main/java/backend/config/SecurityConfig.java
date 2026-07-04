@@ -34,6 +34,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                 .requestMatchers("/api/alumni/kuesioner/active").hasRole("ALUMNI")
                 .requestMatchers("/api/alumni/pengisian/status").hasRole("ALUMNI")
                 .requestMatchers("/api/alumni/kuesioner/*/isi").hasRole("ALUMNI")
