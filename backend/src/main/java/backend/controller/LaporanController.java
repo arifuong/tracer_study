@@ -1,6 +1,6 @@
 package backend.controller;
 
-import backend.dto.LaporanDto;
+import backend.dto.admin.LaporanDto;
 import backend.entity.Laporan;
 import backend.service.ReportService;
 import lombok.Data;
@@ -73,7 +73,6 @@ public class LaporanController {
         dto.setNamaLaporan(laporan.getNamaLaporan());
         dto.setFilterKriteria(laporan.getFilterKriteria());
         dto.setTipeFile(laporan.getTipeFile().name());
-        dto.setFilePath(laporan.getFilePath());
         dto.setCreatedAt(laporan.getCreatedAt());
         return dto;
     }
@@ -84,3 +83,4 @@ public class LaporanController {
         private String namaLaporan;
     }
 }
+

@@ -1,9 +1,9 @@
 package backend.controller;
 
-import backend.dto.AlumniProfileDto;
-import backend.dto.FillRequestDto;
-import backend.dto.KuesionerDto;
-import backend.dto.SubmissionStatusDto;
+import backend.dto.alumni.AlumniProfileDto;
+import backend.dto.alumni.FillRequestDto;
+import backend.dto.admin.KuesionerDto;
+import backend.dto.alumni.SubmissionStatusDto;
 import backend.service.AlumniService;
 import backend.service.KuesionerService;
 import jakarta.validation.Valid;
@@ -51,3 +51,4 @@ public class AlumniController {
         return ResponseEntity.ok("Jawaban berhasil dikirim");
     }
 }
+

@@ -35,9 +35,6 @@ public class Laporan {
     @Column(name = "tipe_file", nullable = false)
     private TipeFile tipeFile;
 
-    @Column(name = "file_path", length = 255)
-    private String filePath;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -45,3 +42,4 @@ public class Laporan {
         PDF, EXCEL
     }
 }
+

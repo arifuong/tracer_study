@@ -1,8 +1,8 @@
 package backend.service;
 
-import backend.dto.DashboardDto;
-import backend.dto.QuestionAnalyticsDto;
-import backend.dto.AnswerAnalyticsDto;
+import backend.dto.admin.DashboardDto;
+import backend.dto.admin.QuestionAnalyticsDto;
+import backend.dto.admin.AnswerAnalyticsDto;
 import backend.entity.Kuesioner;
 import backend.entity.Pertanyaan;
 import backend.entity.Jawaban;
@@ -153,3 +153,4 @@ public class DashboardService {
         return dto;
     }
 }
+

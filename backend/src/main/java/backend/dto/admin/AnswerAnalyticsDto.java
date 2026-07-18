@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.admin;
 
 public class AnswerAnalyticsDto {
     private String answer;
@@ -13,3 +13,4 @@ public class AnswerAnalyticsDto {
     public Double getPercentage() { return percentage; }
     public void setPercentage(Double percentage) { this.percentage = percentage; }
 }
+

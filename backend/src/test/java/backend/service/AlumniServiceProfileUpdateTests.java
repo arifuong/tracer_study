@@ -1,6 +1,6 @@
 package backend.service;
 
-import backend.dto.AlumniProfileDto;
+import backend.dto.alumni.AlumniProfileDto;
 import backend.entity.Alumni;
 import backend.repository.AlumniRepository;
 import backend.exception.BusinessException;
@@ -66,3 +66,4 @@ class AlumniServiceProfileUpdateTests {
         });
     }
 }
+

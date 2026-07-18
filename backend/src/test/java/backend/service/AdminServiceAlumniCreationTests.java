@@ -1,6 +1,6 @@
 package backend.service;
 
-import backend.dto.AlumniProfileDto;
+import backend.dto.alumni.AlumniProfileDto;
 import backend.entity.Alumni;
 import backend.repository.AlumniRepository;
 import org.junit.jupiter.api.Test;
@@ -52,3 +52,4 @@ class AdminServiceAlumniCreationTests {
         assertNull(saved.getJenisKelamin());
     }
 }
+

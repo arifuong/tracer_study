@@ -32,7 +32,8 @@ const ActiveQuestionnaire = () => {
         setActiveKuesioners(activeRes.data);
         setSubmissions(submissionsRes.data);
       } catch (err) {
-        setError('Gagal memuat kuesioner aktif. Silakan muat ulang halaman.');
+        const message = err.response?.data?.message;
+        setError(message || 'Gagal memuat kuesioner aktif. Silakan muat ulang halaman.');
       } finally {
         setLoading(false);
       }
@@ -167,9 +168,9 @@ const ActiveQuestionnaire = () => {
               <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
                 <ClipboardCheck size={22} />
               </div>
-              <h3 className="font-bold text-slate-800 text-sm">Tidak Ada Kuesioner Aktif</h3>
+              <h3 className="font-bold text-slate-800 text-sm">Tidak Ada Kuesioner Tersedia</h3>
               <p className="text-slate-500 text-xs max-w-sm mx-auto">
-                Saat ini tidak ada periode tracer study yang sedang berlangsung. Kami akan mengabari Anda jika periode pengisian baru telah dibuka.
+                Saat ini tidak ada kuesioner yang tersedia untuk tahun yudisium Anda.
               </p>
             </div>
           )}

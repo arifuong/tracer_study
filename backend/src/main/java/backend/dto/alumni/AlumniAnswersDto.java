@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.alumni;
 
 import java.util.List;
 
@@ -28,3 +28,4 @@ public class AlumniAnswersDto {
     public List<QuestionAnswerDto> getAnswers() { return answers; }
     public void setAnswers(List<QuestionAnswerDto> answers) { this.answers = answers; }
 }
+

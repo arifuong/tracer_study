@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.admin;
 
 import java.util.List;
 
@@ -29,3 +29,4 @@ public class DashboardDto {
     public List<QuestionAnalyticsDto> getQuestionAnalytics() { return questionAnalytics; }
     public void setQuestionAnalytics(List<QuestionAnalyticsDto> questionAnalytics) { this.questionAnalytics = questionAnalytics; }
 }
+

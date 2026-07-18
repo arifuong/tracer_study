@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.admin;
 
 // DTO Pattern
 // Mencegah Entity dikirim langsung ke frontend.
@@ -30,3 +30,4 @@ public class MonitoringDto {
     public Long getAlumniId() { return alumniId; }
     public void setAlumniId(Long alumniId) { this.alumniId = alumniId; }
 }
+

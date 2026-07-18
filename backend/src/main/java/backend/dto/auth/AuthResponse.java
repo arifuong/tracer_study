@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.auth;
 
 // DTO Pattern
 // Mencegah Entity dikirim langsung ke frontend.
@@ -20,3 +20,4 @@ public class AuthResponse {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
 }
+

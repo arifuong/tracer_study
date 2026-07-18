@@ -25,6 +25,9 @@ public class PeriodeKuesioner {
     @Column(name = "tanggal_selesai", nullable = false)
     private LocalDate tanggalSelesai;
 
+    @Column(name = "tahun_yudisium_target", nullable = false)
+    private Integer tahunYudisiumTarget;
+
     @Column(columnDefinition = "TEXT")
     private String keterangan;
 }

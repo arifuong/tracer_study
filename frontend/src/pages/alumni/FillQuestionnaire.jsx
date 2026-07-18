@@ -37,8 +37,6 @@ const FillQuestionnaire = () => {
             initialAnswers[p.id] = '';
           });
           setAnswers(initialAnswers);
-        } else {
-          setError('Kuesioner tidak ditemukan atau periode sudah ditutup.');
         }
       } catch (err) {
         setError('Gagal memuat kuesioner. Silakan coba kembali.');
@@ -156,6 +154,23 @@ const FillQuestionnaire = () => {
           >
             Lengkapi Profil
             <ArrowRight size={16} />
+          </Link>
+        </div>
+      ) : !kuesioner ? (
+        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center text-slate-400 space-y-3 shadow-sm">
+          <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
+            <AlertCircle size={22} />
+          </div>
+          <h3 className="font-bold text-slate-800 text-sm">Tidak Ada Kuesioner Tersedia</h3>
+          <p className="text-slate-500 text-xs max-w-sm mx-auto">
+            Saat ini tidak ada kuesioner yang tersedia untuk tahun yudisium Anda.
+          </p>
+          <Link
+            to="/alumni/kuesioner"
+            className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 text-sm font-semibold mt-2"
+          >
+            <ArrowLeft size={14} />
+            Kembali ke Daftar Kuesioner
           </Link>
         </div>
       ) : (

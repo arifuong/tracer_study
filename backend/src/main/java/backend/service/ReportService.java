@@ -27,8 +27,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,22 +44,14 @@ public class ReportService {
     private final DashboardService dashboardService;
     private final PeriodeKuesionerRepository periodeKuesionerRepository;
 
-    private static final String REPORT_DIR = "c:\\laragon\\www\\tracer_study\\backend\\reports";
-
-    private void ensureReportDirectoryExists() {
-        File dir = new File(REPORT_DIR);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-    }
-
     public List<Laporan> getLaporanList() {
         return laporanRepository.findAllByOrderByCreatedAtDesc();
     }
 
     // Helper to format percentage cleanly
     private String formatPercentage(Double percentage) {
-        if (percentage == null) return "0%";
+        if (percentage == null)
+            return "0%";
         double p = percentage;
         if (p == (long) p) {
             return String.format("%.0f%%", p);
@@ -74,13 +64,8 @@ public class ReportService {
     // Menghasilkan dokumen PDF berisi Laporan Tracer Study dengan standar akademik.
     @Transactional
     public byte[] exportPdf(String adminUsername, Long periodeId, String namaLaporanInput) {
-        ensureReportDirectoryExists();
         User admin = userRepository.findByUsername(adminUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Admin tidak ditemukan"));
-
-        String namaLaporan = (namaLaporanInput == null || namaLaporanInput.trim().isEmpty()) 
-                ? "Laporan_Tracer_Study_" + System.currentTimeMillis() 
-                : namaLaporanInput.trim().replace(" ", "_");
 
         List<Alumni> alumniList = alumniRepository.findAll();
         var stats = dashboardService.getDashboardStats(periodeId);
@@ -102,7 +87,8 @@ public class ReportService {
 
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Font.NORMAL, titleColor);
             Font campusFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Font.NORMAL, primaryColor);
-            Font metaFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL, new java.awt.Color(100, 116, 139));
+            Font metaFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL,
+                    new java.awt.Color(100, 116, 139));
             Font sectionTitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Font.NORMAL, primaryColor);
             Font subSectionTitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Font.NORMAL, titleColor);
             Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL, titleColor);
@@ -128,8 +114,9 @@ public class ReportService {
                     periodText = "Periode: " + pOpt.get().getNamaPeriode() + "  |  ";
                 }
             }
-            
-            String printDateText = "Tanggal Cetak: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+
+            String printDateText = "Tanggal Cetak: "
+                    + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
             Paragraph metaParagraph = new Paragraph(periodText + printDateText, metaFont);
             metaParagraph.setAlignment(Element.ALIGN_CENTER);
             metaParagraph.setSpacingAfter(15f);
@@ -154,7 +141,7 @@ public class ReportService {
 
             PdfPTable statsTable = new PdfPTable(2);
             statsTable.setWidthPercentage(100);
-            statsTable.setWidths(new float[]{65f, 35f});
+            statsTable.setWidths(new float[] { 65f, 35f });
             statsTable.setSpacingAfter(20f);
 
             // Add Headers
@@ -175,9 +162,12 @@ public class ReportService {
             String responseRateStr = formatPercentage(stats.getResponseRate());
 
             // Populate rows
-            addStatRow(statsTable, "Total Alumni", String.valueOf(stats.getTotalAlumni()), bodyFont, borderGray, lightBg);
-            addStatRow(statsTable, "Total Responden", String.valueOf(stats.getTotalResponden()), bodyFont, borderGray, whiteColor);
-            addStatRow(statsTable, "Belum Mengisi", String.valueOf(stats.getBelumMengisi()), bodyFont, borderGray, lightBg);
+            addStatRow(statsTable, "Total Alumni", String.valueOf(stats.getTotalAlumni()), bodyFont, borderGray,
+                    lightBg);
+            addStatRow(statsTable, "Total Responden", String.valueOf(stats.getTotalResponden()), bodyFont, borderGray,
+                    whiteColor);
+            addStatRow(statsTable, "Belum Mengisi", String.valueOf(stats.getBelumMengisi()), bodyFont, borderGray,
+                    lightBg);
             addStatRow(statsTable, "Response Rate", responseRateStr, bodyFont, borderGray, whiteColor);
 
             document.add(statsTable);
@@ -200,7 +190,7 @@ public class ReportService {
 
                     PdfPTable qaTable = new PdfPTable(3);
                     qaTable.setWidthPercentage(100);
-                    qaTable.setWidths(new float[]{60f, 20f, 20f});
+                    qaTable.setWidths(new float[] { 60f, 20f, 20f });
                     qaTable.setSpacingBefore(6f);
                     qaTable.setSpacingAfter(20f);
                     qaTable.setKeepTogether(true); // Mencegah tabel kuesioner terpotong halaman
@@ -276,11 +266,13 @@ public class ReportService {
             if (stats.getQuestionAnalytics() != null && !stats.getQuestionAnalytics().isEmpty()) {
                 // Menyusun kesimpulan otomatis berdasarkan tanggapan kuesioner
                 for (var qa : stats.getQuestionAnalytics()) {
-                    String sentence = generateInsightSentence(qa.getQuestionText(), qa.getMostSelectedAnswer(), qa.getMostSelectedPercentage());
+                    String sentence = generateInsightSentence(qa.getQuestionText(), qa.getMostSelectedAnswer(),
+                            qa.getMostSelectedPercentage());
                     bulletList.add(new com.lowagie.text.ListItem(sentence, bodyFont));
                 }
             } else {
-                bulletList.add(new com.lowagie.text.ListItem("Belum ada data kuesioner untuk ditarik kesimpulan.", bodyFont));
+                bulletList.add(
+                        new com.lowagie.text.ListItem("Belum ada data kuesioner untuk ditarik kesimpulan.", bodyFont));
             }
             document.add(bulletList);
 
@@ -294,7 +286,7 @@ public class ReportService {
 
             PdfPTable alumniTable = new PdfPTable(3);
             alumniTable.setWidthPercentage(100);
-            alumniTable.setWidths(new float[]{20f, 50f, 30f});
+            alumniTable.setWidths(new float[] { 20f, 50f, 30f });
             alumniTable.setHeaderRows(1); // Mengulang judul tabel di setiap halaman baru
             alumniTable.setSpacingBefore(8f);
 
@@ -351,36 +343,24 @@ public class ReportService {
 
         byte[] pdfBytes = out.toByteArray();
 
-        // Simpan file ke direktori lokal
-        String filePath = REPORT_DIR + "\\" + namaLaporan + ".pdf";
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            fos.write(pdfBytes);
-        } catch (IOException e) {
-            throw new BusinessException("Gagal menyimpan file PDF ke server: " + e.getMessage());
-        }
-
         // Do not save export history to database
 
         return pdfBytes;
     }
 
     // Export to Excel
-    // Menghasilkan dokumen Excel dengan 3 sheet terpisah dan pemformatan profesional.
+    // Menghasilkan dokumen Excel dengan 3 sheet terpisah dan pemformatan
+    // profesional.
     @Transactional
     public byte[] exportExcel(String adminUsername, Long periodeId, String namaLaporanInput) {
-        ensureReportDirectoryExists();
         User admin = userRepository.findByUsername(adminUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Admin tidak ditemukan"));
-
-        String namaLaporan = (namaLaporanInput == null || namaLaporanInput.trim().isEmpty()) 
-                ? "Laporan_Tracer_Study_" + System.currentTimeMillis() 
-                : namaLaporanInput.trim().replace(" ", "_");
 
         List<Alumni> alumniList = alumniRepository.findAll();
         var stats = dashboardService.getDashboardStats(periodeId);
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            
+
             // 1. STYLES DEFINITION
             // Title Style (14pt, Bold)
             CellStyle titleStyle = workbook.createCellStyle();
@@ -428,7 +408,7 @@ public class ReportService {
 
             // --- SHEET 1: Ringkasan Statistik ---
             Sheet statsSheet = workbook.createSheet("Ringkasan Statistik");
-            
+
             Row r0 = statsSheet.createRow(0);
             Cell c0 = r0.createCell(0);
             c0.setCellValue("LAPORAN TRACER STUDY ALUMNI");
@@ -440,7 +420,8 @@ public class ReportService {
             c1.setCellStyle(titleStyle);
 
             Row r2 = statsSheet.createRow(2);
-            r2.createCell(0).setCellValue("Tanggal Cetak: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
+            r2.createCell(0).setCellValue(
+                    "Tanggal Cetak: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")));
 
             Row r3 = statsSheet.createRow(3);
             r3.createCell(0).setCellValue("Periode: " + namePeriode);
@@ -458,10 +439,10 @@ public class ReportService {
             String responseRateStr = formatPercentage(stats.getResponseRate());
 
             String[][] metrics = {
-                {"Total Alumni", String.valueOf(stats.getTotalAlumni())},
-                {"Total Responden", String.valueOf(stats.getTotalResponden())},
-                {"Belum Mengisi", String.valueOf(stats.getBelumMengisi())},
-                {"Response Rate", responseRateStr}
+                    { "Total Alumni", String.valueOf(stats.getTotalAlumni()) },
+                    { "Total Responden", String.valueOf(stats.getTotalResponden()) },
+                    { "Belum Mengisi", String.valueOf(stats.getBelumMengisi()) },
+                    { "Response Rate", responseRateStr }
             };
 
             int statsRowIdx = 6;
@@ -472,7 +453,8 @@ public class ReportService {
                 cellA.setCellStyle(dataStyle);
 
                 Cell cellB = row.createCell(1);
-                // Coba set numeric value jika berupa angka murni untuk memudahkan sorting/formula di Excel
+                // Coba set numeric value jika berupa angka murni untuk memudahkan
+                // sorting/formula di Excel
                 try {
                     cellB.setCellValue(Double.parseDouble(metric[1]));
                 } catch (NumberFormatException e) {
@@ -481,7 +463,8 @@ public class ReportService {
                 cellB.setCellStyle(centerDataStyle);
             }
 
-            // Freeze header rows on stats page (freeze row index 6, which freezes row index 0 to 5)
+            // Freeze header rows on stats page (freeze row index 6, which freezes row index
+            // 0 to 5)
             statsSheet.createFreezePane(0, 6);
 
             statsSheet.autoSizeColumn(0);
@@ -510,7 +493,7 @@ public class ReportService {
 
                     // Headers for question table
                     Row qHeaderRow = analyticsSheet.createRow(aRowIdx++);
-                    String[] qHeaders = {"Jawaban", "Jumlah", "Persentase"};
+                    String[] qHeaders = { "Jawaban", "Jumlah", "Persentase" };
                     for (int i = 0; i < qHeaders.length; i++) {
                         Cell cell = qHeaderRow.createCell(i);
                         cell.setCellValue(qHeaders[i]);
@@ -536,7 +519,7 @@ public class ReportService {
                             cellPct.setCellStyle(centerDataStyle);
                         }
                     }
-                    
+
                     // Spacer rows
                     aRowIdx += 2;
                     qNum++;
@@ -559,7 +542,7 @@ public class ReportService {
 
             // Table headers (Row 2)
             Row alHeaderRow = alumniSheet.createRow(2);
-            String[] alHeaders = {"NIM", "Nama", "Program Studi"};
+            String[] alHeaders = { "NIM", "Nama", "Program Studi" };
             for (int i = 0; i < alHeaders.length; i++) {
                 Cell cell = alHeaderRow.createCell(i);
                 cell.setCellValue(alHeaders[i]);
@@ -573,7 +556,7 @@ public class ReportService {
             int alRowIdx = 3;
             for (Alumni alumni : alumniList) {
                 Row row = alumniSheet.createRow(alRowIdx++);
-                
+
                 Cell cellNim = row.createCell(0);
                 cellNim.setCellValue(alumni.getNim());
                 cellNim.setCellStyle(centerDataStyle); // Center aligned NIM
@@ -594,12 +577,6 @@ public class ReportService {
             workbook.write(out);
             byte[] excelBytes = out.toByteArray();
 
-            // Simpan file ke direktori lokal
-            String filePath = REPORT_DIR + "\\" + namaLaporan + ".xlsx";
-            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                fos.write(excelBytes);
-            }
-
             // Do not save export history to database
 
             return excelBytes;
@@ -611,7 +588,8 @@ public class ReportService {
 
     // Helper to generate a single stat table row in PDF
     // Membuat baris data ringkasan statistik dengan pewarnaan custom
-    private void addStatRow(PdfPTable table, String indicator, String value, Font font, java.awt.Color borderColor, java.awt.Color bg) {
+    private void addStatRow(PdfPTable table, String indicator, String value, Font font, java.awt.Color borderColor,
+            java.awt.Color bg) {
         PdfPCell cell1 = new PdfPCell(new Phrase(indicator, font));
         cell1.setPadding(8f);
         cell1.setBorderColor(borderColor);
@@ -636,7 +614,8 @@ public class ReportService {
 
         if (qLower.contains("aktivitas")) {
             return "Mayoritas alumni saat ini " + ansLower + " (" + pct + ").";
-        } else if (qLower.contains("lama mendapatkan") || qLower.contains("masa tunggu") || qLower.contains("waktu mendapatkan") || qLower.contains("pekerjaan pertama")) {
+        } else if (qLower.contains("lama mendapatkan") || qLower.contains("masa tunggu")
+                || qLower.contains("waktu mendapatkan") || qLower.contains("pekerjaan pertama")) {
             return "Mayoritas alumni memperoleh pekerjaan pertama dalam waktu " + ansLower + " (" + pct + ").";
         } else if (qLower.contains("dosen")) {
             return "Alumni menilai kualitas dosen " + ansLower + " (" + pct + ").";
@@ -649,10 +628,12 @@ public class ReportService {
                 return "Alumni menilai kepuasan kualitas pendidikan kampus adalah " + ans + " (" + pct + ").";
             }
         } else if (qLower.contains("rekomendasi")) {
-            if (ansLower.contains("ya") || ansLower.contains("bersedia") || ansLower.contains("merekomendasikan") || ansLower.contains("sangat bersedia")) {
+            if (ansLower.contains("ya") || ansLower.contains("bersedia") || ansLower.contains("merekomendasikan")
+                    || ansLower.contains("sangat bersedia")) {
                 return "Alumni bersedia merekomendasikan kampus kepada orang lain (" + pct + ").";
             } else {
-                return "Alumni menyatakan " + ansLower + " untuk merekomendasikan kampus kepada orang lain (" + pct + ").";
+                return "Alumni menyatakan " + ansLower + " untuk merekomendasikan kampus kepada orang lain (" + pct
+                        + ").";
             }
         } else if (qLower.contains("kesesuaian") || qLower.contains("bidang studi") || qLower.contains("sesuai")) {
             return "Alumni menilai kesesuaian bidang studi dengan pekerjaan adalah " + ansLower + " (" + pct + ").";
@@ -661,3 +642,4 @@ public class ReportService {
         }
     }
 }
+

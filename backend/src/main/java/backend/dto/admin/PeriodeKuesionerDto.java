@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.admin;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +19,9 @@ public class PeriodeKuesionerDto {
     @NotNull(message = "Tanggal selesai tidak boleh kosong")
     private LocalDate tanggalSelesai;
 
+    @NotNull(message = "Tahun yudisium target tidak boleh kosong")
+    private Integer tahunYudisiumTarget;
+
     private String keterangan;
 
     // Getters and Setters
@@ -30,6 +33,8 @@ public class PeriodeKuesionerDto {
     public void setTanggalMulai(LocalDate tanggalMulai) { this.tanggalMulai = tanggalMulai; }
     public LocalDate getTanggalSelesai() { return tanggalSelesai; }
     public void setTanggalSelesai(LocalDate tanggalSelesai) { this.tanggalSelesai = tanggalSelesai; }
+    public Integer getTahunYudisiumTarget() { return tahunYudisiumTarget; }
+    public void setTahunYudisiumTarget(Integer tahunYudisiumTarget) { this.tahunYudisiumTarget = tahunYudisiumTarget; }
     public String getKeterangan() { return keterangan; }
     public void setKeterangan(String keterangan) { this.keterangan = keterangan; }
 }

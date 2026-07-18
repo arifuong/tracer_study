@@ -1,6 +1,6 @@
 package backend.service;
 
-import backend.dto.AlumniProfileDto;
+import backend.dto.alumni.AlumniProfileDto;
 import backend.entity.Alumni;
 import backend.entity.User;
 import backend.repository.AlumniRepository;
@@ -153,3 +153,4 @@ public class AlumniService {
         return dto;
     }
 }
+

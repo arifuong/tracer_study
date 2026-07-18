@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.alumni;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -105,3 +105,4 @@ public class AlumniProfileDto {
     public boolean isPasswordChanged() { return passwordChanged; }
     public void setPasswordChanged(boolean passwordChanged) { this.passwordChanged = passwordChanged; }
 }
+

@@ -11,6 +11,7 @@ const AlumniDashboard = () => {
   const [profile, setProfile] = useState(null);
   const [submissions, setSubmissions] = useState([]);
   const [activeKuesioners, setActiveKuesioners] = useState([]);
+  const [kuesionerUnavailable, setKuesionerUnavailable] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -22,14 +23,22 @@ const AlumniDashboard = () => {
         const profileRes = await getAlumniProfile();
         setProfile(profileRes.data);
 
-        // Hanya mengambil kuesioner dan status jika profil lengkap
         if (profileRes.data.profileComplete) {
-          const [submissionsRes, activeRes] = await Promise.all([
-            getSubmissionStatus(),
-            getActiveKuesioner()
-          ]);
-          setSubmissions(submissionsRes.data);
-          setActiveKuesioners(activeRes.data);
+          try {
+            const submissionsRes = await getSubmissionStatus();
+            setSubmissions(submissionsRes.data);
+          } catch {
+            setSubmissions([]);
+          }
+
+          try {
+            const activeRes = await getActiveKuesioner();
+            setActiveKuesioners(activeRes.data);
+            setKuesionerUnavailable(false);
+          } catch {
+            setActiveKuesioners([]);
+            setKuesionerUnavailable(true);
+          }
         }
       } catch (err) {
         setError('Gagal memuat data dashboard. Silakan muat ulang halaman.');
@@ -142,9 +151,13 @@ const AlumniDashboard = () => {
               <ClipboardCheck size={24} />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800 text-base">Belum Ada Kuesioner Baru</h3>
+              <h3 className="font-bold text-slate-800 text-base">
+                {kuesionerUnavailable ? 'Kuesioner Tidak Tersedia' : 'Belum Ada Kuesioner Baru'}
+              </h3>
               <p className="text-slate-600 text-sm mt-0.5">
-                Tidak ada kuesioner aktif untuk diisi saat ini. Terima kasih telah memantau tracer study.
+                {kuesionerUnavailable
+                  ? 'Tidak ada kuesioner tersedia.'
+                  : 'Tidak ada kuesioner aktif untuk diisi saat ini. Terima kasih telah memantau tracer study.'}
               </p>
             </div>
           </div>

@@ -1,6 +1,7 @@
 package backend.service;
 
-import backend.dto.*;
+import backend.dto.admin.*;
+import backend.dto.alumni.*;
 import backend.entity.*;
 import backend.exception.BusinessException;
 import backend.exception.ResourceNotFoundException;
@@ -159,10 +160,12 @@ public class AdminService {
         if (dto.getTanggalSelesai().isBefore(dto.getTanggalMulai())) {
             throw new BusinessException("Tanggal selesai tidak boleh kurang dari tanggal mulai");
         }
+        validateTahunYudisiumTarget(dto.getTahunYudisiumTarget());
         PeriodeKuesioner p = new PeriodeKuesioner();
         p.setNamaPeriode(dto.getNamaPeriode());
         p.setTanggalMulai(dto.getTanggalMulai());
         p.setTanggalSelesai(dto.getTanggalSelesai());
+        p.setTahunYudisiumTarget(dto.getTahunYudisiumTarget());
         p.setKeterangan(dto.getKeterangan());
         
         PeriodeKuesioner saved = periodeKuesionerRepository.save(p);
@@ -174,12 +177,14 @@ public class AdminService {
         if (dto.getTanggalSelesai().isBefore(dto.getTanggalMulai())) {
             throw new BusinessException("Tanggal selesai tidak boleh kurang dari tanggal mulai");
         }
+        validateTahunYudisiumTarget(dto.getTahunYudisiumTarget());
         PeriodeKuesioner p = periodeKuesionerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Periode tidak ditemukan dengan ID: " + id));
 
         p.setNamaPeriode(dto.getNamaPeriode());
         p.setTanggalMulai(dto.getTanggalMulai());
         p.setTanggalSelesai(dto.getTanggalSelesai());
+        p.setTahunYudisiumTarget(dto.getTahunYudisiumTarget());
         p.setKeterangan(dto.getKeterangan());
 
         PeriodeKuesioner saved = periodeKuesionerRepository.save(p);
@@ -432,12 +437,28 @@ public class AdminService {
         return dto;
     }
 
+    private void validateTahunYudisiumTarget(Integer tahunYudisiumTarget) {
+        if (tahunYudisiumTarget == null) {
+            throw new BusinessException("Tahun yudisium target wajib diisi");
+        }
+        if (tahunYudisiumTarget == 0) {
+            throw new BusinessException("Tahun yudisium target tidak boleh 0");
+        }
+        if (tahunYudisiumTarget < 2000) {
+            throw new BusinessException("Tahun yudisium target tidak boleh kurang dari 2000");
+        }
+        if (tahunYudisiumTarget > 2100) {
+            throw new BusinessException("Tahun yudisium target tidak boleh lebih dari 2100");
+        }
+    }
+
     private PeriodeKuesionerDto mapToPeriodeDto(PeriodeKuesioner p) {
         PeriodeKuesionerDto dto = new PeriodeKuesionerDto();
         dto.setId(p.getId());
         dto.setNamaPeriode(p.getNamaPeriode());
         dto.setTanggalMulai(p.getTanggalMulai());
         dto.setTanggalSelesai(p.getTanggalSelesai());
+        dto.setTahunYudisiumTarget(p.getTahunYudisiumTarget());
         dto.setKeterangan(p.getKeterangan());
         return dto;
     }
@@ -463,3 +484,4 @@ public class AdminService {
         return dto;
     }
 }
+

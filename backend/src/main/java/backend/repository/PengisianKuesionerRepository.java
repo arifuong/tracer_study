@@ -17,6 +17,7 @@ public interface PengisianKuesionerRepository extends JpaRepository<PengisianKue
     Optional<PengisianKuesioner> findByAlumniAndKuesioner(Alumni alumni, Kuesioner kuesioner);
     Optional<PengisianKuesioner> findByAlumniIdAndKuesionerId(Long alumniId, Long kuesionerId);
     boolean existsByAlumniIdAndKuesionerId(Long alumniId, Long kuesionerId);
+    boolean existsByAlumniIdAndKuesionerPeriodeId(Long alumniId, Long periodeId);
     List<PengisianKuesioner> findByKuesionerId(Long kuesionerId);
     List<PengisianKuesioner> findByKuesionerPeriodeId(Long periodeId);
 

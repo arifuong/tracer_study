@@ -7,7 +7,3 @@ export const getMonitoringJawaban = (periodId) => {
 export const getMonitoringJawabanDetail = (periodId, alumniId) => {
   return api.get(`/api/admin/monitoring/${periodId}/alumni/${alumniId}`);
 };
-
-export const getMonitoringPengisian = (periodId) => {
-  return api.get(`/api/admin/monitoring/${periodId}`);
-};

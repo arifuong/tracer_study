@@ -16,6 +16,7 @@ const PeriodeCrud = () => {
   const [namaPeriode, setNamaPeriode] = useState('');
   const [tanggalMulai, setTanggalMulai] = useState('');
   const [tanggalSelesai, setTanggalSelesai] = useState('');
+  const [tahunYudisiumTarget, setTahunYudisiumTarget] = useState('');
   const [keterangan, setKeterangan] = useState('');
 
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
@@ -40,6 +41,7 @@ const PeriodeCrud = () => {
     setNamaPeriode('');
     setTanggalMulai('');
     setTanggalSelesai('');
+    setTahunYudisiumTarget('');
     setKeterangan('');
     setFormError('');
     setIsModalOpen(true);
@@ -50,6 +52,7 @@ const PeriodeCrud = () => {
     setNamaPeriode(period.namaPeriode || '');
     setTanggalMulai(period.tanggalMulai || '');
     setTanggalSelesai(period.tanggalSelesai || '');
+    setTahunYudisiumTarget(period.tahunYudisiumTarget ?? '');
     setKeterangan(period.keterangan || '');
     setFormError('');
     setIsModalOpen(true);
@@ -65,12 +68,19 @@ const PeriodeCrud = () => {
       return;
     }
 
+    const parsedTahunTarget = parseInt(tahunYudisiumTarget, 10);
+    if (!tahunYudisiumTarget || Number.isNaN(parsedTahunTarget) || parsedTahunTarget < 2000 || parsedTahunTarget > 2100) {
+      setFormError('Tahun yudisium target harus berupa angka antara 2000 dan 2100.');
+      return;
+    }
+
     setSaving(true);
 
     const payload = {
       namaPeriode,
       tanggalMulai,
       tanggalSelesai,
+      tahunYudisiumTarget: parsedTahunTarget,
       keterangan
     };
 
@@ -178,6 +188,10 @@ const PeriodeCrud = () => {
                       <span className="text-slate-400">Tanggal Selesai:</span>
                       <span>{period.tanggalSelesai}</span>
                     </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400">Target Yudisium:</span>
+                      <span>{period.tahunYudisiumTarget ?? '-'}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -260,6 +274,20 @@ const PeriodeCrud = () => {
                   value={tanggalSelesai}
                   onChange={(e) => setTanggalSelesai(e.target.value)}
                   required
+                  className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-700 text-xs font-semibold mb-1.5">Tahun Yudisium Target</label>
+                <input
+                  type="number"
+                  min="2000"
+                  max="2100"
+                  value={tahunYudisiumTarget}
+                  onChange={(e) => setTahunYudisiumTarget(e.target.value)}
+                  required
+                  placeholder="Contoh: 2025"
                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm"
                 />
               </div>

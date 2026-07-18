@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.alumni;
 
 public class QuestionAnswerDto {
     private Long questionId;
@@ -24,3 +24,4 @@ public class QuestionAnswerDto {
     public String getAnswerText() { return answerText; }
     public void setAnswerText(String answerText) { this.answerText = answerText; }
 }
+

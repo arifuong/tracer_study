@@ -55,4 +55,9 @@ public class Alumni {
 
     @Column(name = "alamat_rumah", columnDefinition = "TEXT")
     private String alamatRumah;
+
+    // Tahun yudisium alumni, diambil dari tanggal lulus/yudisium (tanpa kolom DB tambahan).
+    public Integer getTahunYudisium() {
+        return tanggalLulus != null ? tanggalLulus.getYear() : null;
+    }
 }

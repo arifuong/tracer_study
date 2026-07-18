@@ -1,6 +1,6 @@
 package backend.controller;
 
-import backend.dto.DashboardDto;
+import backend.dto.admin.DashboardDto;
 import backend.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,3 +36,4 @@ public class DashboardController {
         return ResponseEntity.ok(dashboardService.getDashboardStats(periodeId));
     }
 }
+

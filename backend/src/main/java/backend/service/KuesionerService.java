@@ -1,21 +1,24 @@
 package backend.service;
 
-import backend.dto.KuesionerDto;
-import backend.dto.PertanyaanDto;
-import backend.dto.FillRequestDto;
-import backend.dto.SubmissionStatusDto;
+import backend.dto.admin.KuesionerDto;
+import backend.dto.admin.PertanyaanDto;
+import backend.dto.alumni.FillRequestDto;
+import backend.dto.alumni.SubmissionStatusDto;
 import backend.entity.Alumni;
 import backend.entity.Kuesioner;
 import backend.entity.PengisianKuesioner;
 import backend.entity.Jawaban;
 import backend.entity.Pertanyaan;
+import backend.entity.PeriodeKuesioner;
 import backend.exception.BusinessException;
+import backend.exception.ForbiddenException;
 import backend.exception.ResourceNotFoundException;
 import backend.repository.AlumniRepository;
 import backend.repository.KuesionerRepository;
 import backend.repository.PengisianKuesionerRepository;
 import backend.repository.JawabanRepository;
 import backend.repository.PertanyaanRepository;
+import backend.repository.PeriodeKuesionerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class KuesionerService {
     private final PengisianKuesionerRepository pengisianKuesionerRepository;
     private final JawabanRepository jawabanRepository;
     private final PertanyaanRepository pertanyaanRepository;
+    private final PeriodeKuesionerRepository periodeKuesionerRepository;
     private final AlumniService alumniService;
 
     // Memastikan profil alumni sudah lengkap sesuai dengan aturan bisnis.
@@ -62,12 +66,30 @@ public class KuesionerService {
         }
 
         LocalDate today = LocalDate.now();
-        List<Kuesioner> activeKuesioners = kuesionerRepository.findActiveQuestionnaires(today);
-        
-        return activeKuesioners.stream()
+        List<PeriodeKuesioner> activePeriods = periodeKuesionerRepository.findActivePeriods(today);
+        if (activePeriods.isEmpty()) {
+            logActiveKuesionerDebug(alumni, null, false, false, false);
+            return List.of();
+        }
+
+        List<Kuesioner> eligibleKuesioners = new ArrayList<>();
+
+        for (PeriodeKuesioner periode : activePeriods) {
+            boolean periodeAktif = validateActivePeriod(periode);
+            boolean tahunCocok = isTahunYudisiumMatch(alumni, periode);
+            boolean sudahPernahIsi = pengisianKuesionerRepository
+                    .existsByAlumniIdAndKuesionerPeriodeId(alumni.getId(), periode.getId());
+            logActiveKuesionerDebug(alumni, periode, periodeAktif, tahunCocok, sudahPernahIsi);
+
+            if (!tahunCocok) {
+                continue;
+            }
+            eligibleKuesioners.addAll(kuesionerRepository.findByPeriodeId(periode.getId()));
+        }
+
+        return eligibleKuesioners.stream()
                 .map(k -> {
                     KuesionerDto dto = mapToKuesionerDto(k);
-                    // Fetch and map questions
                     List<PertanyaanDto> questions = pertanyaanRepository.findByKuesionerIdOrderByOrderIndexAsc(k.getId())
                             .stream()
                             .map(this::mapToPertanyaanDto)
@@ -123,16 +145,20 @@ public class KuesionerService {
         Kuesioner kuesioner = kuesionerRepository.findById(kuesionerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Kuesioner tidak ditemukan"));
 
+        PeriodeKuesioner periode = kuesioner.getPeriode();
+
         // BR-04: Hanya periode aktif yang dapat diisi
-        LocalDate today = LocalDate.now();
-        LocalDate start = kuesioner.getPeriode().getTanggalMulai();
-        LocalDate end = kuesioner.getPeriode().getTanggalSelesai();
-        if (today.isBefore(start) || today.isAfter(end)) {
-            throw new BusinessException("Kuesioner sudah ditutup atau belum dibuka untuk pengisian");
+        validateActivePeriod(periode);
+
+        // Alumni hanya boleh mengisi jika tahun yudisium sesuai target periode aktif
+        if (!isTahunYudisiumMatch(alumni, periode)) {
+            throw new ForbiddenException(
+                    "Anda tidak termasuk dalam target alumni tahun yudisium untuk periode tracer study yang sedang aktif");
         }
 
-        // BR-03: Alumni hanya boleh mengisi satu kali per periode/kuesioner
-        boolean alreadySubmitted = pengisianKuesionerRepository.existsByAlumniIdAndKuesionerId(alumni.getId(), kuesionerId);
+        // BR-03: Alumni hanya boleh mengisi satu kali per periode
+        boolean alreadySubmitted = pengisianKuesionerRepository
+                .existsByAlumniIdAndKuesionerPeriodeId(alumni.getId(), periode.getId());
         if (alreadySubmitted) {
             throw new BusinessException("Anda sudah mengisi kuesioner pada periode ini");
         }
@@ -164,6 +190,66 @@ public class KuesionerService {
         }
     }
 
+    private boolean validateActivePeriod(PeriodeKuesioner periode) {
+        LocalDate today = LocalDate.now();
+        LocalDate start = periode.getTanggalMulai();
+        LocalDate end = periode.getTanggalSelesai();
+        boolean periodeAktif = !today.isBefore(start) && !today.isAfter(end);
+
+        System.out.println("=== DEBUG validateActivePeriod ===");
+        System.out.println("Periode id=" + periode.getId() + ", today=" + today + ", mulai=" + start + ", selesai=" + end);
+        System.out.println("periode aktif? " + periodeAktif);
+        System.out.println("==================================");
+
+        if (!periodeAktif) {
+            throw new BusinessException("Kuesioner sudah ditutup atau belum dibuka untuk pengisian");
+        }
+        return true;
+    }
+
+    private boolean isTahunYudisiumMatch(Alumni alumni, PeriodeKuesioner periode) {
+        Integer tahunAlumni = alumni.getTahunYudisium();
+        Integer tahunTarget = periode.getTahunYudisiumTarget();
+        boolean cocok = tahunAlumni != null && tahunTarget != null && tahunAlumni.equals(tahunTarget);
+
+        System.out.println("=== DEBUG isTahunYudisiumMatch ===");
+        System.out.println("tahun alumni = " + tahunAlumni);
+        System.out.println("tahun target = " + tahunTarget);
+        System.out.println("tahun yudisium cocok? " + cocok);
+        System.out.println("==================================");
+
+        return cocok;
+    }
+
+    private void logActiveKuesionerDebug(Alumni alumni, PeriodeKuesioner periode,
+                                         boolean periodeAktif, boolean tahunCocok, boolean sudahPernahIsi) {
+        System.out.println("=== DEBUG ===");
+        System.out.println();
+        System.out.println("Alumni:");
+        System.out.println("- id = " + alumni.getId());
+        System.out.println("- nama = " + alumni.getNamaLengkap());
+        System.out.println("- tanggalLulus = " + alumni.getTanggalLulus());
+        System.out.println("- tahunYudisium = " + alumni.getTahunYudisium());
+        System.out.println();
+        System.out.println("Periode Aktif:");
+        if (periode == null) {
+            System.out.println("- (tidak ada periode aktif)");
+        } else {
+            System.out.println("- id = " + periode.getId());
+            System.out.println("- namaPeriode = " + periode.getNamaPeriode());
+            System.out.println("- tahunYudisiumTarget = " + periode.getTahunYudisiumTarget());
+            System.out.println("- tanggalMulai = " + periode.getTanggalMulai());
+            System.out.println("- tanggalSelesai = " + periode.getTanggalSelesai());
+        }
+        System.out.println();
+        System.out.println("Hasil Validasi:");
+        System.out.println("- periode aktif? " + periodeAktif);
+        System.out.println("- tahun yudisium cocok? " + tahunCocok);
+        System.out.println("- sudah pernah isi? " + sudahPernahIsi);
+        System.out.println();
+        System.out.println("================");
+    }
+
     // Mapping Helpers
     private KuesionerDto mapToKuesionerDto(Kuesioner kuesioner) {
         KuesionerDto dto = new KuesionerDto();
@@ -186,3 +272,4 @@ public class KuesionerService {
         return dto;
     }
 }
+

@@ -1,6 +1,7 @@
 package backend.controller;
 
-import backend.dto.*;
+import backend.dto.admin.*;
+import backend.dto.alumni.*;
 import backend.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -138,3 +139,4 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAlumniAnswers(periodeId, alumniId));
     }
 }
+

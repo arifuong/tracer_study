@@ -1,7 +1,7 @@
 package backend.controller;
 
-import backend.dto.AuthResponse;
-import backend.dto.LoginRequest;
+import backend.dto.auth.AuthResponse;
+import backend.dto.auth.LoginRequest;
 import backend.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,3 +33,4 @@ public class AuthController {
         return ResponseEntity.ok("Logout berhasil");
     }
 }
+

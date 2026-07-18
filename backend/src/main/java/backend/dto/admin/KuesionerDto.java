@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.admin;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,3 +36,4 @@ public class KuesionerDto {
     public List<PertanyaanDto> getPertanyaan() { return pertanyaan; }
     public void setPertanyaan(List<PertanyaanDto> pertanyaan) { this.pertanyaan = pertanyaan; }
 }
+

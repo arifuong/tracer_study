@@ -1,7 +1,7 @@
 package backend.service;
 
-import backend.dto.AuthResponse;
-import backend.dto.LoginRequest;
+import backend.dto.auth.AuthResponse;
+import backend.dto.auth.LoginRequest;
 import backend.entity.User;
 import backend.exception.UnauthorizedException;
 import backend.repository.UserRepository;
@@ -36,3 +36,4 @@ public class AuthService {
         return new AuthResponse(token, user.getUsername(), user.getRole().name());
     }
 }
+

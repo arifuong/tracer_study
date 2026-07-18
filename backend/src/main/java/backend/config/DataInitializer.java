@@ -90,10 +90,18 @@ public class DataInitializer implements CommandLineRunner {
             periodeAktif.setNamaPeriode("Tracer Study 2025");
             periodeAktif.setTanggalMulai(LocalDate.now().minusDays(15));
             periodeAktif.setTanggalSelesai(LocalDate.now().plusDays(45));
+            periodeAktif.setTahunYudisiumTarget(2025);
             periodeAktif.setKeterangan("Periode Pelacakan Lulusan 2025");
             periodeAktif = periodeKuesionerRepository.save(periodeAktif);
         } else {
             periodeAktif = periodeList.get(0);
+            for (PeriodeKuesioner periode : periodeList) {
+                Integer target = periode.getTahunYudisiumTarget();
+                if (target == null || target == 0) {
+                    periode.setTahunYudisiumTarget(2025);
+                    periodeKuesionerRepository.save(periode);
+                }
+            }
         }
 
         // 3. CEK ATAU SEED KUESIONER

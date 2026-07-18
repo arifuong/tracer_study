@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.alumni;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,3 +18,4 @@ public class AnswerSubmissionDto {
     public String getJawabanTeks() { return jawabanTeks; }
     public void setJawabanTeks(String jawabanTeks) { this.jawabanTeks = jawabanTeks; }
 }
+

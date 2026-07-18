@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.admin;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,3 +34,4 @@ public class PertanyaanDto {
     public Integer getOrderIndex() { return orderIndex; }
     public void setOrderIndex(Integer orderIndex) { this.orderIndex = orderIndex; }
 }
+

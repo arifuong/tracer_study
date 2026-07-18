@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.alumni;
 
 // DTO Pattern
 // Mencegah Entity dikirim langsung ke frontend.
@@ -29,3 +29,4 @@ public class SubmissionStatusDto {
     public String getTanggalIsi() { return tanggalIsi; }
     public void setTanggalIsi(String tanggalIsi) { this.tanggalIsi = tanggalIsi; }
 }
+

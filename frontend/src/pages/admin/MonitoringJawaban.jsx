@@ -103,7 +103,7 @@ const MonitoringJawaban = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Monitoring Jawaban Alumni</h1>
-        <p className="text-slate-500 text-sm mt-1">Pantau status pengisian dan lihat detail jawaban kuesioner tracer study alumni (Read-Only).</p>
+        <p className="text-slate-500 text-sm mt-1">Pantau status pengisian dan lihat detail jawaban kuesioner tracer study alumni.</p>
       </div>
 
       {/* Error Alert */}

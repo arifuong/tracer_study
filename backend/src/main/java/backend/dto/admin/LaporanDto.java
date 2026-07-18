@@ -1,4 +1,4 @@
-package backend.dto;
+package backend.dto.admin;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +10,6 @@ public class LaporanDto {
     private String namaLaporan;
     private String filterKriteria;
     private String tipeFile;
-    private String filePath;
     private LocalDateTime createdAt;
 
     // Getters and Setters
@@ -24,8 +23,7 @@ public class LaporanDto {
     public void setFilterKriteria(String filterKriteria) { this.filterKriteria = filterKriteria; }
     public String getTipeFile() { return tipeFile; }
     public void setTipeFile(String tipeFile) { this.tipeFile = tipeFile; }
-    public String getFilePath() { return filePath; }
-    public void setFilePath(String filePath) { this.filePath = filePath; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
+
